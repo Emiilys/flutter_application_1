@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app.dart';
-
+import 'homepage.dart'; // 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -43,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Image.asset(
-                    'assets/logo.png', // substitua pelo caminho da sua imagem
+                    'assets/logo.jpeg', // substitua pelo caminho da sua imagem
                     height: 90,
                     width: 90,
                     fit: BoxFit.contain,
@@ -122,11 +121,18 @@ class _LoginPageState extends State<LoginPage> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Ao pressionar, navega para app.dart (tela App)
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const App()),
-                      );
-                    },
+                        // Validação simples (opcional: adicione lógica real de login aqui)
+                        if (emailController.text.isNotEmpty && senhaController.text.isNotEmpty) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => const HomePage()), // Agora vai para HomePage
+                          );
+                        } else {
+                          // Mostra um snackbar se campos vazios (opcional)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Preencha email e senha!')),
+                          );
+                        }
+                      },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff00835a),
                       shape: RoundedRectangleBorder(
