@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1058905959232",
+    "project_id": "emc-emergencycenter",
+    "storage_bucket": "emc-emergencycenter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058905959232:android:508aa5f8010ef4c21e28a5",
+        "android_client_info": {
+          "package_name": "com.emc.emergencycenter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArSo3BI1ky4Mm6L5u1FiTmog6b7uPfo4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
