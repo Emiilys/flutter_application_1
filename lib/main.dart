@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'loginpage.dart'; // Importe a tela de login
+import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'loginpage.dart';
 
-void main() {
+void main() async {
+ WidgetsFlutterBinding.ensureInitialized();
+ // flawait Firebase.initializeApp();//** // 🔹 usa o google-services.json
   runApp(const MyApp());
 }
 
@@ -13,11 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EMC - Emergency Center!',
       theme: ThemeData(
-        primarySwatch: Colors.green, // Tema verde para combinar com o app
+        primarySwatch: Colors.green,
         useMaterial3: true,
       ),
-      home: const LoginPage(), // Inicia com a tela de login
-      debugShowCheckedModeBanner: false, // Remove a faixa de debug
+      home: const LoginPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

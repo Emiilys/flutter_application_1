@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1058905959232",
-    "project_id": "emc-emergencycenter",
-    "storage_bucket": "emc-emergencycenter.firebasestorage.app"
+    "project_number": "573957474693",
+    "project_id": "emc-tcc-app",
+    "storage_bucket": "emc-tcc-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1058905959232:android:508aa5f8010ef4c21e28a5",
+        "mobilesdk_app_id": "1:573957474693:android:1e195c2296ae00b07e1cec",
         "android_client_info": {
-          "package_name": "com.emc.emergencycenter"
+          "package_name": "com.example.flutter_application_1"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyArSo3BI1ky4Mm6L5u1FiTmog6b7uPfo4c"
+          "current_key": "AIzaSyBu1mMNzsibxugy4YFg2KsTqavB30jbwEs"
         }
       ],
       "services": {
