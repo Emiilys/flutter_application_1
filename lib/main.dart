@@ -7,7 +7,7 @@ import 'loginpage.dart';
 void main() async {
  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);//** // 🔹 usa o google-services.json
-  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: "emily@gmail.com", password: "1234a00"); // 🔹 usa o emulador
+  //await FirebaseAuth.instance.createUserWithEmailAndPassword(email: "emily@gmail.com", password: "1234a00"); // 🔹 usa o emulador
   runApp(const MyApp());
   
 }
