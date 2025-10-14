@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'loginpage.dart';
 import 'profilepage.dart';
 import 'chatpage.dart';
+import 'ficha_page.dart';
+
 
 class HomePage extends StatelessWidget { // Renomeado para HomePage
   const HomePage({super.key});
@@ -153,14 +155,19 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                     },
                   ),
                   _buildCard(
-                    color: const Color(0xffffe6f0),
-                    icon: Icons.description,
-                    title: 'Ficha',
-                    subtitle: 'Informações médicas',
-                    backgroundIcon: Icons.note_alt_outlined,
-                    iconBackgroundColor: const Color(0xfff979c1),
-                    iconColor: Colors.white,
-                  ),
+                  color: const Color(0xffffe6f0),
+                  icon: Icons.description,
+                  title: 'Ficha',
+                  subtitle: 'Informações médicas',
+                  backgroundIcon: Icons.note_alt_outlined,
+                  iconBackgroundColor: const Color(0xfff979c1),
+                  iconColor: Colors.white,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FichaPage()),
+                    );
+                  },
+                ),
                 ],
               )
             )
