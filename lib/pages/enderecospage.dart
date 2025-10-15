@@ -28,7 +28,7 @@ class _EnderecosPageState extends State<EnderecosPage> {
   final List<Map<String, String>> enderecosUsuario = [];
 
   final categorias = [
-    'Todas',
+    'Todas!',
     'Hospitais',
     'UPA',
     'Clínicas',
