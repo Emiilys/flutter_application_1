@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'MinhaFichaPage.dart';
-import 'FichaOutraPessoaPage.dart';
+import 'minhafichapage.dart';
+import 'fichaoutrapessoapage.dart';
 
 class FichaPage extends StatelessWidget {
   const FichaPage({super.key});

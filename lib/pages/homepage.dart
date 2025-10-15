@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/enderecospage.dart';
 import 'loginpage.dart';
-import 'pages/profilepage.dart';
+import 'profilepage.dart';
 import 'chatpage.dart';
 import 'ficha_page.dart';
+import 'telefonepage.dart';
+import 'enderecospage.dart';
 
 
 class HomePage extends StatelessWidget { // Renomeado para HomePage
@@ -104,7 +107,7 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 children: [
-                  _buildCard(
+                 _buildCard(
                     color: const Color(0xffffe6e6),
                     icon: Icons.phone,
                     title: 'Telefones',
@@ -112,7 +115,13 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                     backgroundIcon: Icons.phone_in_talk,
                     iconBackgroundColor: const Color(0xffd45a58),
                     iconColor: Colors.white,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const TelefonePage()),
+                      );
+                    },
                   ),
+
                   _buildCard(
                     color: const Color(0xffe6f7e6),
                     icon: Icons.favorite,
@@ -139,6 +148,11 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                     backgroundIcon: Icons.location_pin,
                     iconBackgroundColor: const Color(0xfff5c555),
                     iconColor: Colors.white,
+                     onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const EnderecosPage()),
+                      );
+                    },
                   ),
                   _buildCard(
                     color: const Color(0xfff0e8ff),
