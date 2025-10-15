@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'homepage.dart';
-import 'register_page.dart'; // (a gente vai criar essa página depois)
+import 'loginpage.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
+  final TextEditingController confirmarSenhaController = TextEditingController();
   bool isLoading = false;
 
-  Future<void> fazerLogin() async {
+  Future<void> registrarUsuario() async {
     final email = emailController.text.trim();
     final senha = senhaController.text.trim();
+    final confirmarSenha = confirmarSenhaController.text.trim();
 
-    if (email.isEmpty || senha.isEmpty) {
+    if (email.isEmpty || senha.isEmpty || confirmarSenha.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Preencha todos os campos.')),
+      );
+      return;
+    }
+
+    if (senha != confirmarSenha) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As senhas não coincidem.')),
       );
       return;
     }
@@ -29,34 +37,38 @@ class _LoginPageState extends State<LoginPage> {
     try {
       setState(() => isLoading = true);
 
-      // 🔹 Faz login com Firebase Auth
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // 🔹 Cria o usuário no Firebase Auth
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: senha,
       );
 
-      // 🔹 Se o login deu certo, vai para o menu (HomePage)
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        );
+
+        // 🔹 Volta para a tela de login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       }
     } on FirebaseAuthException catch (e) {
       String mensagemErro;
 
       switch (e.code) {
-        case 'user-not-found':
-          mensagemErro = 'Usuário não encontrado.';
-          break;
-        case 'wrong-password':
-          mensagemErro = 'Senha incorreta.';
+        case 'email-already-in-use':
+          mensagemErro = 'Esse email já está em uso.';
           break;
         case 'invalid-email':
           mensagemErro = 'Email inválido.';
           break;
+        case 'weak-password':
+          mensagemErro = 'A senha deve ter pelo menos 6 caracteres.';
+          break;
         default:
-          mensagemErro = 'Erro ao fazer login: ${e.message}';
+          mensagemErro = 'Erro ao cadastrar: ${e.message}';
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Imagem e título
+                // Logo
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -105,25 +117,18 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
                 const Text(
-                  "EMC",
+                  "Criar Conta",
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff00835a),
-                  ),
-                ),
-                const Text(
-                  "Emergency Center",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
                     color: Color(0xff00835a),
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Campos de texto
+                // Campo email
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -135,6 +140,8 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 16),
+
+                // Campo senha
                 TextField(
                   controller: senhaController,
                   decoration: InputDecoration(
@@ -145,14 +152,27 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   obscureText: true,
                 ),
+                const SizedBox(height: 16),
+
+                // Campo confirmar senha
+                TextField(
+                  controller: confirmarSenhaController,
+                  decoration: InputDecoration(
+                    hintText: "Confirmar Senha",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
                 const SizedBox(height: 24),
 
-                // Botão de login
+                // Botão cadastrar
                 SizedBox(
                   width: double.infinity,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: isLoading ? null : fazerLogin,
+                    onPressed: isLoading ? null : registrarUsuario,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff00835a),
                       shape: RoundedRectangleBorder(
@@ -162,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
-                            "Entrar",
+                            "Cadastrar",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -173,20 +193,20 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 16),
                 GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RegisterPage()),
-                  );
-                },
-                child: const Text(
-                  "Não tem conta? Cadastre-se",
-                  style: TextStyle(
-                    color: Color(0xff00835a),
-                    fontWeight: FontWeight.w600,
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Já tem conta? Faça login",
+                    style: TextStyle(
+                      color: Color(0xff00835a),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-               ),
               ],
             ),
           ),
