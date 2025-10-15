@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
-import 'profilepage.dart';
+import 'pages/profilepage.dart';
 import 'chatpage.dart';
 import 'ficha_page.dart';
 
