@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'minhafichapage.dart';
-import 'fichaoutrapessoapage.dart';
+import 'dependente_choice_page.dart';
 
 class FichaPage extends StatelessWidget {
   const FichaPage({super.key});
@@ -105,7 +105,7 @@ class FichaPage extends StatelessWidget {
   } else {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const FichaOutraPessoaPage()),
+      MaterialPageRoute(builder: (_) => const DependenteChoicePage()),
     );
   }
 },
