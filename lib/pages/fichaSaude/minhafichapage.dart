@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MinhaFichaPage extends StatefulWidget {
   final Map<String, String> usuarioLogado;
@@ -15,6 +17,12 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
   final Color verdeEscuro = const Color(0xFF2E7D32);
   final Color azulEsverdeado = const Color(0xFF4DB6AC);
 
+  // Controladores dos TextFields
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController idadeController = TextEditingController();
+  final TextEditingController pesoController = TextEditingController();
+  final TextEditingController alturaController = TextEditingController();
+
   // Campos de seleção
   String? pronomeSelecionado;
   String? generoSelecionado;
@@ -23,12 +31,12 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
   String? alimentacao;
   String? frequenciaConteudo;
 
-  // Variáveis dos campos de Sim/Não
+  // Campos de Sim/Não
   bool? temCondicaoCronica;
   bool? fuma;
   bool? bebe;
 
-  // Opções das checkboxes
+  // Conteúdos selecionados
   Map<String, bool> conteudosSelecionados = {
     "Dicas de saúde física": false,
     "Exercícios e meditação": false,
@@ -36,6 +44,80 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     "Notícias ou artigos sobre bem-estar": false,
     "Grupos e comunidades": false,
   };
+
+  // Editável ou não
+  bool _editavel = true;
+
+  @override
+  void initState() {
+    super.initState();
+    carregarFicha();
+  }
+
+  Future<void> carregarFicha() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('fichas').doc(user.uid).get();
+
+    if (doc.exists) {
+      final data = doc.data();
+      setState(() {
+        nomeController.text = data?['nome'] ?? '';
+        idadeController.text = data?['idade'] ?? '';
+        pesoController.text = data?['peso'] ?? '';
+        alturaController.text = data?['altura'] ?? '';
+
+        pronomeSelecionado = data?['pronome'];
+        generoSelecionado = data?['genero'];
+        frequenciaAtividade = data?['frequenciaAtividade'];
+        qualidadeSono = data?['qualidadeSono'];
+        alimentacao = data?['alimentacao'];
+        frequenciaConteudo = data?['frequenciaConteudo'];
+
+        temCondicaoCronica = data?['temCondicaoCronica'];
+        fuma = data?['fuma'];
+        bebe = data?['bebe'];
+
+        if (data?['conteudosSelecionados'] != null) {
+          Map<String, dynamic> conteudos = Map<String, dynamic>.from(data!['conteudosSelecionados']);
+          conteudosSelecionados.updateAll((key, value) => conteudos[key] ?? false);
+        }
+
+        _editavel = false; // Dados já existentes → congelar
+      });
+    }
+  }
+
+  Future<void> salvarFicha() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseFirestore.instance.collection('fichas').doc(user.uid).set({
+      'nome': nomeController.text.isEmpty ? null : nomeController.text,
+      'idade': idadeController.text.isEmpty ? null : idadeController.text,
+      'peso': pesoController.text.isEmpty ? null : pesoController.text,
+      'altura': alturaController.text.isEmpty ? null : alturaController.text,
+      'pronome': pronomeSelecionado,
+      'genero': generoSelecionado,
+      'frequenciaAtividade': frequenciaAtividade,
+      'qualidadeSono': qualidadeSono,
+      'alimentacao': alimentacao,
+      'frequenciaConteudo': frequenciaConteudo,
+      'temCondicaoCronica': temCondicaoCronica,
+      'fuma': fuma,
+      'bebe': bebe,
+      'conteudosSelecionados': conteudosSelecionados,
+    });
+
+    setState(() {
+      _editavel = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ficha salva com sucesso! ✅')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,42 +142,35 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
             _buildSection(
               title: "Dados Pessoais Básicos",
               children: [
-                _buildTextField("Como gostaria de ser chamado?", "Seu nome preferido"),
+                _buildTextField("Como gostaria de ser chamado?", "Seu nome preferido", nomeController),
                 _buildDropdown(
                   label: "Pronomes?",
                   hint: "Selecione os seus pronomes",
                   value: pronomeSelecionado,
                   items: ["Ele/Dele", "Ela/Dela", "Elu/Delu", "Prefiro não dizer"],
-                  onChanged: (v) => setState(() => pronomeSelecionado = v),
+                  onChanged: _editavel ? (v) => setState(() => pronomeSelecionado = v) : null,
                 ),
-                _buildTextField("Qual a sua idade?", "Ex: 30"),
+                _buildTextField("Qual a sua idade?", "Ex: 30", idadeController),
                 _buildDropdown(
                   label: "Qual o seu gênero?",
                   hint: "Selecione",
                   value: generoSelecionado,
                   items: ["Masculino", "Feminino", "Não-binário", "Outro", "Prefiro não dizer"],
-                  onChanged: (v) => setState(() => generoSelecionado = v),
+                  onChanged: _editavel ? (v) => setState(() => generoSelecionado = v) : null,
                 ),
-                _buildTextField("Qual o seu peso atual? (kg)", "Ex: 70"),
-                _buildTextField("Qual a sua altura? (cm)", "Ex: 170"),
+                _buildTextField("Qual o seu peso atual? (kg)", "Ex: 70", pesoController),
+                _buildTextField("Qual a sua altura? (cm)", "Ex: 170", alturaController),
                 _buildSimNao(
                   "Você tem alguma condição médica crônica?",
                   valorSelecionado: temCondicaoCronica,
-                  onChanged: (v) => setState(() => temCondicaoCronica = v),
+                  onChanged: (v) => _editavel ? setState(() => temCondicaoCronica = v) : null,
                 ),
                 _buildDropdown(
                   label: "Com que frequência você pratica atividade física?",
                   hint: "Selecione a frequência",
                   value: frequenciaAtividade,
-                  items: [
-                    "Sempre",
-                    "Geralmente",
-                    "Frequentemente",
-                    "Às vezes",
-                    "Ocasionalmente",
-                    "Raramente"
-                  ],
-                  onChanged: (v) => setState(() => frequenciaAtividade = v),
+                  items: ["Sempre", "Geralmente", "Frequentemente", "Às vezes", "Ocasionalmente", "Raramente"],
+                  onChanged: _editavel ? (v) => setState(() => frequenciaAtividade = v) : null,
                 ),
               ],
             ),
@@ -108,30 +183,24 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
                   hint: "Selecione a qualidade",
                   value: qualidadeSono,
                   items: ["Ruim", "Moderada", "Boa", "Ótima"],
-                  onChanged: (v) => setState(() => qualidadeSono = v),
+                  onChanged: _editavel ? (v) => setState(() => qualidadeSono = v) : null,
                 ),
                 _buildSimNao(
                   "Você fuma ou usa algum tipo de cigarro?",
                   valorSelecionado: fuma,
-                  onChanged: (v) => setState(() => fuma = v),
+                  onChanged: (v) => _editavel ? setState(() => fuma = v) : null,
                 ),
                 _buildSimNao(
                   "Consome bebidas alcoólicas?",
                   valorSelecionado: bebe,
-                  onChanged: (v) => setState(() => bebe = v),
+                  onChanged: (v) => _editavel ? setState(() => bebe = v) : null,
                 ),
                 _buildDropdown(
                   label: "Qual sua alimentação predominante?",
                   hint: "Selecione sua alimentação",
                   value: alimentacao,
-                  items: [
-                    "Muito saudável",
-                    "Equilibrada",
-                    "Moderada",
-                    "Pouco saudável",
-                    "Não saudável"
-                  ],
-                  onChanged: (v) => setState(() => alimentacao = v),
+                  items: ["Muito saudável", "Equilibrada", "Moderada", "Pouco saudável", "Não saudável"],
+                  onChanged: _editavel ? (v) => setState(() => alimentacao = v) : null,
                 ),
               ],
             ),
@@ -152,9 +221,11 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
                     title: Text(key, style: GoogleFonts.poppins(color: verdeEscuro)),
                     activeColor: azulEsverdeado,
                     value: conteudosSelecionados[key],
-                    onChanged: (v) {
-                      setState(() => conteudosSelecionados[key] = v ?? false);
-                    },
+                    onChanged: _editavel
+                        ? (v) {
+                            setState(() => conteudosSelecionados[key] = v ?? false);
+                          }
+                        : null,
                   );
                 }).toList(),
                 const SizedBox(height: 10),
@@ -162,44 +233,55 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
                   label: "Com que frequência você gostaria de receber os conteúdos?",
                   hint: "Selecione a frequência",
                   value: frequenciaConteudo,
-                  items: [
-                    "Todos os dias",
-                    "A cada 2 dias",
-                    "Semanalmente",
-                    "A cada 15 dias",
-                    "Mensalmente"
-                  ],
-                  onChanged: (v) => setState(() => frequenciaConteudo = v),
+                  items: ["Todos os dias", "A cada 2 dias", "Semanalmente", "A cada 15 dias", "Mensalmente"],
+                  onChanged: _editavel ? (v) => setState(() => frequenciaConteudo = v) : null,
                 ),
               ],
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: azulEsverdeado,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                elevation: 3,
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Ficha salva com sucesso! ✅",
-                      style: GoogleFonts.poppins(color: Colors.white),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_editavel)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: azulEsverdeado,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      elevation: 3,
                     ),
-                    backgroundColor: verdeEscuro,
+                    onPressed: salvarFicha,
+                    child: Text(
+                      "Salvar",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                );
-              },
-              child: Text(
-                "Salvar e obter a Ficha de Saúde",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+                if (!_editavel)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: azulEsverdeado,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      elevation: 3,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _editavel = true;
+                      });
+                    },
+                    child: Text(
+                      "Editar",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            )
           ],
         ),
       ),
@@ -238,10 +320,12 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     );
   }
 
-  Widget _buildTextField(String label, String hint) {
+  Widget _buildTextField(String label, String hint, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
+        controller: controller,
+        enabled: _editavel,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -262,7 +346,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     required String hint,
     required List<String> items,
     required String? value,
-    required void Function(String?) onChanged,
+    required void Function(String?)? onChanged,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -301,7 +385,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
                   activeColor: azulEsverdeado,
                   value: true,
                   groupValue: valorSelecionado,
-                  onChanged: (v) => onChanged(v!),
+                  onChanged: _editavel ? (v) => onChanged(v!) : null,
                 ),
               ),
               Expanded(
@@ -310,7 +394,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
                   activeColor: azulEsverdeado,
                   value: false,
                   groupValue: valorSelecionado,
-                  onChanged: (v) => onChanged(v!),
+                  onChanged: _editavel ? (v) => onChanged(v!) : null,
                 ),
               ),
             ],

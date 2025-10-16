@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   String? _profileImageUrl;
   bool _isLoading = true;
@@ -23,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _emailController.text = user.email ?? '';
     _loadUserData();
   }
 
@@ -92,6 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
       await _saveUserData();
     } catch (e) {
       debugPrint('Erro ao enviar imagem: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao enviar imagem')),
+      );
     }
   }
 
@@ -113,28 +118,56 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // FOTO DE PERFIL
-            GestureDetector(
-              onTap: _pickAndUploadImage,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.orange.shade100,
-                backgroundImage:
-                    _profileImageUrl != null ? NetworkImage(_profileImageUrl!) : null,
-                child: _profileImageUrl == null
-                    ? const Icon(Icons.camera_alt, size: 50, color: Colors.orange)
-                    : null,
-              ),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                // Avatar com borda
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.orange, width: 4),
+                  ),
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.orange.shade100,
+                    backgroundImage: _profileImageUrl != null
+                        ? NetworkImage(_profileImageUrl!)
+                        : null,
+                    child: _profileImageUrl == null
+                        ? const Icon(Icons.person, size: 60, color: Colors.orange)
+                        : null,
+                  ),
+                ),
+                // Ícone de editar
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: _pickAndUploadImage,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
 
-            // EMAIL
+            // EMAIL (corrigido)
             TextField(
+              controller: _emailController,
               enabled: false,
               decoration: InputDecoration(
                 labelText: 'Email',
-                hintText: user.email,
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -142,9 +175,11 @@ class _ProfilePageState extends State<ProfilePage> {
             // NOME
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Nome',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -152,28 +187,33 @@ class _ProfilePageState extends State<ProfilePage> {
             // TELEFONE
             TextField(
               controller: _phoneController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Telefone',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 30),
 
             // BOTÃO SALVAR
-            ElevatedButton.icon(
-              onPressed: _saveUserData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: _saveUserData,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              icon: const Icon(Icons.save, color: Colors.white),
-              label: const Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                icon: const Icon(Icons.save, color: Colors.white),
+                label: const Text(
+                  'Salvar',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
           ],

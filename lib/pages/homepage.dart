@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/enderecospage.dart';
+import 'package:flutter_application_1/pages/enderecosImportantes/enderecospage.dart';
 import 'loginpage.dart';
 import 'profilepage.dart';
-import 'chatpage.dart';
-import 'ficha_page.dart';
-import 'telefonepage.dart';
-import 'enderecospage.dart';
+import 'chat/chatpage.dart';
+import 'fichaSaude/ficha_page.dart';
+import 'telefoneEmergencia/telefonepage.dart';
+import 'enderecosImportantes/enderecospage.dart';
 
 
 class HomePage extends StatelessWidget { // Renomeado para HomePage
