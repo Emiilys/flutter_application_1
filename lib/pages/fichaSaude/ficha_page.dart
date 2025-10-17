@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'minhafichapage.dart';
-import 'dependente_choice_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FichaPage extends StatelessWidget {
   const FichaPage({super.key});
@@ -8,46 +7,44 @@ class FichaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFEFF3F9),
       appBar: AppBar(
-        title: const Text(
-          "Ficha Personalizada",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        backgroundColor: const Color(0xFF3A7BD5),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        elevation: 0,
+        title: Text(
+          "Ficha de Saúde",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            color: Colors.white,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFFFF8E1), Color(0xFFFFF3E0)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Tipo de Ficha",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: const Color(0xFF2B4C7E),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Selecione o tipo de ficha para personalizar as informações",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
+              Text(
+                "Selecione o tipo de ficha para visualizar ou editar as informações de saúde.",
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Colors.blueGrey[600],
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -55,23 +52,31 @@ class FichaPage extends StatelessWidget {
 
               // Card 1 - Minha Ficha
               _buildFichaCard(
-                context,
-                color: Colors.green.shade400,
+                color: const Color(0xFF3A7BD5),
                 icon: Icons.person_outline,
                 title: "Minha Ficha",
                 description:
-                    "Ficha pessoal com suas informações de saúde e medicamentos",
+                    "Acesse suas informações pessoais de saúde, medicamentos e condições médicas.",
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
-              // Card 2 - Ficha para Outra Pessoa
+              // Card 2 - Ficha para Idosos
               _buildFichaCard(
-                context,
-                color: Colors.blue.shade500,
-                icon: Icons.group_outlined,
-                title: "Ficha para Outra Pessoa",
+                color: const Color(0xFF4A90E2),
+                icon: Icons.elderly_rounded,
+                title: "Ficha para Idosos",
                 description:
-                    "Ficha específica para cuidados de outra pessoa, medicamentos e condições especiais",
+                    "Ficha específica para cuidados geriátricos, medicamentos e condições especiais.",
+              ),
+              const SizedBox(height: 24),
+
+              // Card 3 - Ficha para Bebês
+              _buildFichaCard(
+                color: const Color(0xFF6EC6FF),
+                icon: Icons.child_care_rounded,
+                title: "Ficha para Bebês",
+                description:
+                    "Ficha específica para cuidados pediátricos, alergias e informações importantes.",
               ),
             ],
           ),
@@ -80,74 +85,53 @@ class FichaPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFichaCard(
-    BuildContext context, {
+  Widget _buildFichaCard({
     required Color color,
     required IconData icon,
     required String title,
     required String description,
   }) {
-    return GestureDetector(
-      onTap: () {
-  if (title == "Minha Ficha") {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MinhaFichaPage(
-          usuarioLogado: {
-            'nome': 'Maria Clara',
-            'email': 'maria@example.com',
-            'idade': '22',
-          },
-        ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blueGrey.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-    );
-  } else {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const DependenteChoicePage()),
-    );
-  }
-},
-
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 34,
+            backgroundColor: color.withOpacity(0.15),
+            child: Icon(icon, color: color, size: 38),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: color,
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: color.withOpacity(0.15),
-              child: Icon(icon, color: color, size: 36),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              color: Colors.blueGrey[600],
+              fontSize: 14,
+              height: 1.4,
             ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black54, fontSize: 14),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
