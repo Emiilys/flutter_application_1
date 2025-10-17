@@ -6,6 +6,8 @@ import 'chat/chatpage.dart';
 import 'fichaSaude/ficha_page.dart';
 import 'telefoneEmergencia/telefonepage.dart';
 import 'enderecosImportantes/enderecospage.dart';
+import 'primeirosocorrospage.dart';
+
 
 
 class HomePage extends StatelessWidget { // Renomeado para HomePage
@@ -139,6 +141,11 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                     backgroundIcon: Icons.local_hospital_outlined,
                     iconBackgroundColor: const Color(0xff3f88db),
                     iconColor: Colors.white,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const PrimeirosSocorrosPage()),
+                      );
+                    },
                   ),
                   _buildCard(
                     color: const Color(0xfff9f0e6),
