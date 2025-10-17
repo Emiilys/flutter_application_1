@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EnderecosPage extends StatefulWidget {
   const EnderecosPage({super.key});
@@ -18,41 +19,75 @@ class _EnderecosPageState extends State<EnderecosPage> {
     },
     {
       'nome': 'UPA Centro',
-      'categoria': 'UPA',
+      'categoria': 'Prontos-socorros',
       'endereco': 'Avenida Central, 456',
       'telefone': '(11) 5555-6666'
     },
   ];
 
-  // Endereços adicionados pelo usuário
-  final List<Map<String, String>> enderecosUsuario = [];
-
+  // Categorias fixas
   final categorias = [
-    'Todas!',
+    'Todas',
+    'Farmácias',
     'Hospitais',
-    'UPA',
-    'Clínicas',
-    'Pediatria',
-    'Geriatria',
-    'Cardiologia'
+    'Prontos-socorros',
+    'Postos de saúde / UBS',
+    'Delegacias de polícia',
+    'Corpo de Bombeiros',
+    'Centros de Assistência Social',
+    'CAPS',
   ];
 
   String categoriaSelecionada = 'Todas';
 
-  void adicionarEndereco(Map<String, String> novo) {
-    setState(() => enderecosUsuario.add(novo));
+  // Endereços do Firestore
+  List<Map<String, dynamic>> enderecosUsuario = [];
+
+  @override
+  void initState() {
+    super.initState();
+    carregarEnderecos();
   }
 
-  void removerEndereco(int index) {
+  // Carregar endereços do Firestore
+  void carregarEnderecos() async {
+    final snapshot = await FirebaseFirestore.instance.collection('enderecos').get();
+    final lista = snapshot.docs.map((doc) {
+      final data = doc.data();
+      data['id'] = doc.id; // guardando o ID para edição/exclusão
+      return data;
+    }).toList();
+
+    setState(() => enderecosUsuario = lista);
+  }
+
+  // Adicionar endereço
+  void adicionarEndereco(Map<String, String> novo) async {
+    final docRef = await FirebaseFirestore.instance.collection('enderecos').add(novo);
+    setState(() => enderecosUsuario.add({...novo, 'id': docRef.id}));
+  }
+
+  // Remover endereço
+  void removerEndereco(int index) async {
+    final docId = enderecosUsuario[index]['id'];
+    await FirebaseFirestore.instance.collection('enderecos').doc(docId).delete();
     setState(() => enderecosUsuario.removeAt(index));
   }
 
+  // Editar endereço
+  void editarEndereco(int index, Map<String, String> atualizado) async {
+    final docId = enderecosUsuario[index]['id'];
+    await FirebaseFirestore.instance.collection('enderecos').doc(docId).update(atualizado);
+    setState(() => enderecosUsuario[index] = {...atualizado, 'id': docId});
+  }
+
+  // Dialog para editar endereço
   void editarEnderecoDialog(int index) {
     final endereco = enderecosUsuario[index];
     final nomeController = TextEditingController(text: endereco['nome']);
     final enderecoController = TextEditingController(text: endereco['endereco']);
     final telefoneController = TextEditingController(text: endereco['telefone']);
-    String categoriaAtual = endereco['categoria']!;
+    String categoriaAtual = endereco['categoria'];
 
     showDialog(
       context: context,
@@ -93,14 +128,13 @@ class _EnderecosPageState extends State<EnderecosPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                enderecosUsuario[index] = {
-                  'nome': nomeController.text,
-                  'endereco': enderecoController.text,
-                  'telefone': telefoneController.text,
-                  'categoria': categoriaAtual,
-                };
-              });
+              final atualizado = {
+                'nome': nomeController.text,
+                'endereco': enderecoController.text,
+                'telefone': telefoneController.text,
+                'categoria': categoriaAtual,
+              };
+              editarEndereco(index, atualizado);
               Navigator.pop(context);
             },
             child: const Text('Salvar'),
@@ -112,7 +146,7 @@ class _EnderecosPageState extends State<EnderecosPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Junta os fixos + os do usuário
+    // Junta os fixos + os do Firestore
     final listaFiltrada = categoriaSelecionada == 'Todas'
         ? [...enderecosFixos, ...enderecosUsuario]
         : [
@@ -144,12 +178,18 @@ class _EnderecosPageState extends State<EnderecosPage> {
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
+            runSpacing: 8,
             children: categorias.map((cat) {
               final selecionado = categoriaSelecionada == cat;
               return ChoiceChip(
                 label: Text(cat),
                 selected: selecionado,
                 selectedColor: Colors.amber,
+                backgroundColor: Colors.grey[200],
+                labelStyle: TextStyle(
+                  color: selecionado ? Colors.black : Colors.grey[800],
+                  fontWeight: selecionado ? FontWeight.bold : FontWeight.normal,
+                ),
                 onSelected: (_) => setState(() => categoriaSelecionada = cat),
               );
             }).toList(),
@@ -172,15 +212,16 @@ class _EnderecosPageState extends State<EnderecosPage> {
                     trailing: isUsuario
                         ? PopupMenuButton<String>(
                             onSelected: (value) {
-                              if (value == 'editar') editarEnderecoDialog(index - enderecosFixos.length);
-                              if (value == 'excluir') removerEndereco(index - enderecosFixos.length);
+                              final userIndex = enderecosUsuario.indexOf(e);
+                              if (value == 'editar') editarEnderecoDialog(userIndex);
+                              if (value == 'excluir') removerEndereco(userIndex);
                             },
                             itemBuilder: (context) => [
                               const PopupMenuItem(value: 'editar', child: Text('Editar')),
                               const PopupMenuItem(value: 'excluir', child: Text('Excluir')),
                             ],
                           )
-                        : null, // Endereços fixos não têm opções
+                        : null,
                   ),
                 );
               },
