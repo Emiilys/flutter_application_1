@@ -7,6 +7,8 @@ import 'fichaSaude/ficha_page.dart';
 import 'telefoneEmergencia/telefonepage.dart';
 import 'enderecosImportantes/enderecospage.dart';
 import 'primeirosocorrospage.dart';
+import 'bemestar/bem_estar_page.dart';
+
 
 
 
@@ -132,6 +134,11 @@ class HomePage extends StatelessWidget { // Renomeado para HomePage
                     backgroundIcon: Icons.favorite_outline,
                     iconBackgroundColor: const Color(0xff65c268),
                     iconColor: Colors.white,
+                     onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const BemEstarPage()),
+                      );
+                    },
                   ),
                   _buildCard(
                     color: const Color(0xffe6f1ff),
