@@ -7,7 +7,7 @@ import 'fichaSaude/ficha_page.dart';
 import 'telefoneEmergencia/telefonepage.dart';
 import 'enderecosImportantes/enderecospage.dart';
 import 'primeirosocorrospage.dart';
-import 'bemestar/bem_estar_page.dart';
+import 'bemEstar/bem_estar_page.dart';
 
 
 
