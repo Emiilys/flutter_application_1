@@ -9,7 +9,6 @@ class EnderecosPage extends StatefulWidget {
 }
 
 class _EnderecosPageState extends State<EnderecosPage> {
-  // Endereços fixos do sistema (não podem ser editados ou removidos)
   final List<Map<String, String>> enderecosFixos = [
     {
       'nome': 'Hospital Santa Maria',
@@ -25,7 +24,6 @@ class _EnderecosPageState extends State<EnderecosPage> {
     },
   ];
 
-  // Categorias fixas
   final categorias = [
     'Todas',
     'Farmácias',
@@ -39,8 +37,6 @@ class _EnderecosPageState extends State<EnderecosPage> {
   ];
 
   String categoriaSelecionada = 'Todas';
-
-  // Endereços do Firestore
   List<Map<String, dynamic>> enderecosUsuario = [];
 
   @override
@@ -49,39 +45,34 @@ class _EnderecosPageState extends State<EnderecosPage> {
     carregarEnderecos();
   }
 
-  // Carregar endereços do Firestore
   void carregarEnderecos() async {
     final snapshot = await FirebaseFirestore.instance.collection('enderecos').get();
     final lista = snapshot.docs.map((doc) {
       final data = doc.data();
-      data['id'] = doc.id; // guardando o ID para edição/exclusão
+      data['id'] = doc.id;
       return data;
     }).toList();
 
     setState(() => enderecosUsuario = lista);
   }
 
-  // Adicionar endereço
   void adicionarEndereco(Map<String, String> novo) async {
     final docRef = await FirebaseFirestore.instance.collection('enderecos').add(novo);
     setState(() => enderecosUsuario.add({...novo, 'id': docRef.id}));
   }
 
-  // Remover endereço
   void removerEndereco(int index) async {
     final docId = enderecosUsuario[index]['id'];
     await FirebaseFirestore.instance.collection('enderecos').doc(docId).delete();
     setState(() => enderecosUsuario.removeAt(index));
   }
 
-  // Editar endereço
   void editarEndereco(int index, Map<String, String> atualizado) async {
     final docId = enderecosUsuario[index]['id'];
     await FirebaseFirestore.instance.collection('enderecos').doc(docId).update(atualizado);
     setState(() => enderecosUsuario[index] = {...atualizado, 'id': docId});
   }
 
-  // Dialog para editar endereço
   void editarEnderecoDialog(int index) {
     final endereco = enderecosUsuario[index];
     final nomeController = TextEditingController(text: endereco['nome']);
@@ -96,18 +87,9 @@ class _EnderecosPageState extends State<EnderecosPage> {
         content: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                controller: nomeController,
-                decoration: const InputDecoration(labelText: 'Nome'),
-              ),
-              TextField(
-                controller: enderecoController,
-                decoration: const InputDecoration(labelText: 'Endereço'),
-              ),
-              TextField(
-                controller: telefoneController,
-                decoration: const InputDecoration(labelText: 'Telefone'),
-              ),
+              TextField(controller: nomeController, decoration: const InputDecoration(labelText: 'Nome')),
+              TextField(controller: enderecoController, decoration: const InputDecoration(labelText: 'Endereço')),
+              TextField(controller: telefoneController, decoration: const InputDecoration(labelText: 'Telefone')),
               DropdownButton<String>(
                 value: categoriaAtual,
                 items: categorias
@@ -122,10 +104,7 @@ class _EnderecosPageState extends State<EnderecosPage> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
           ElevatedButton(
             onPressed: () {
               final atualizado = {
@@ -146,7 +125,6 @@ class _EnderecosPageState extends State<EnderecosPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Junta os fixos + os do Firestore
     final listaFiltrada = categoriaSelecionada == 'Todas'
         ? [...enderecosFixos, ...enderecosUsuario]
         : [
@@ -156,21 +134,57 @@ class _EnderecosPageState extends State<EnderecosPage> {
 
     return Scaffold(
       backgroundColor: Colors.yellow[50],
-      appBar: AppBar(
-        title: const Text('Endereços Importantes'),
-        backgroundColor: Colors.amber,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => adicionarEndereco({
-              'nome': 'Novo Endereço',
-              'categoria': 'Hospitais',
-              'endereco': 'Rua Exemplo, 000',
-              'telefone': '(11) 9999-9999'
-            }),
-          )
-        ],
+
+      // 🔹 Cabeçalho personalizado
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFFFA000), Color(0xFFFFC107)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                      child: const Icon(Icons.location_on, color: Colors.amber),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        'Endereços Importantes',
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Encontre rapidamente hospitais, farmácias e outros serviços essenciais',
+                  style: TextStyle(fontSize: 14, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TelefonePage extends StatefulWidget {
   const TelefonePage({super.key});
@@ -18,7 +19,6 @@ class _TelefonePageState extends State<TelefonePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Telefones oficiais fixos
   final List<Map<String, String>> contatosFixos = [
     {'nome': 'Polícia Militar', 'numero': '190'},
     {'nome': 'SAMU', 'numero': '192'},
@@ -38,7 +38,6 @@ class _TelefonePageState extends State<TelefonePage> {
 
     final nome = nomeController.text.trim();
     final numero = numeroController.text.trim();
-
     if (nome.isEmpty || numero.isEmpty) return;
 
     await firestore.collection('contatos').add({
@@ -76,10 +75,7 @@ class _TelefonePageState extends State<TelefonePage> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
           ElevatedButton(
             onPressed: () async {
               await firestore.collection('contatos').doc(contato.id).update({
@@ -102,15 +98,9 @@ class _TelefonePageState extends State<TelefonePage> {
         title: const Text('Excluir contato'),
         content: const Text('Tem certeza que deseja excluir este contato?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
             onPressed: () async {
               await firestore.collection('contatos').doc(contato.id).delete();
               Navigator.pop(context);
@@ -124,10 +114,7 @@ class _TelefonePageState extends State<TelefonePage> {
 
   void _alternarFavorito(DocumentSnapshot contato) async {
     final favoritoAtual = contato['favorito'] ?? false;
-    await firestore
-        .collection('contatos')
-        .doc(contato.id)
-        .update({'favorito': !favoritoAtual});
+    await firestore.collection('contatos').doc(contato.id).update({'favorito': !favoritoAtual});
   }
 
   void _ligar(String numero) async {
@@ -147,16 +134,64 @@ class _TelefonePageState extends State<TelefonePage> {
     final contatosRef = firestore.collection('contatos');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Telefones de Emergência',
-          style: TextStyle(fontWeight: FontWeight.bold),
+      backgroundColor: const Color(0xfffff5f2),
+      // 🔹 Cabeçalho personalizado com emoji e descrição
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF00897B), Color(0xFF26A69A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: const Icon(Icons.phone, color: Color(0xFF00897B)),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        'Telefones de Emergência',
+                        style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Encontre e ligue rapidamente para serviços essenciais',
+                  style: TextStyle(fontSize: 14, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
         ),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF00897B),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 70), // 🔹 evita que o botão sobreponha
+        padding: const EdgeInsets.only(bottom: 70),
         child: Column(
           children: [
             // 🔍 Campo de pesquisa
@@ -176,19 +211,11 @@ class _TelefonePageState extends State<TelefonePage> {
                 },
               ),
             ),
-
-            // 🔹 Conteúdo
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 children: [
-                  const Text(
-                    'Emergências Oficiais',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  const Text('Emergências Oficiais', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
                   ...contatosFixos.map((c) => Card(
                         color: Colors.red[50],
@@ -201,12 +228,7 @@ class _TelefonePageState extends State<TelefonePage> {
                             backgroundColor: Colors.redAccent,
                             child: Icon(Icons.local_phone, color: Colors.white),
                           ),
-                          title: Text(
-                            c['nome']!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red.shade700),
-                          ),
+                          title: Text(c['nome']!, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade700)),
                           subtitle: Text(c['numero']!),
                           trailing: IconButton(
                             icon: const Icon(Icons.call, color: Colors.redAccent),
@@ -216,90 +238,37 @@ class _TelefonePageState extends State<TelefonePage> {
                       )),
                   const SizedBox(height: 20),
                   const Divider(),
-                  const Text(
-                    'Favoritos ⭐',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  const Text('Favoritos ⭐', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
-
-                  // ⭐ Seção de favoritos
                   StreamBuilder<QuerySnapshot>(
-                    stream: contatosRef
-                        .where('uid', isEqualTo: usuario?.uid)
-                        .where('favorito', isEqualTo: true)
-                        .snapshots(),
+                    stream: contatosRef.where('uid', isEqualTo: usuario?.uid).where('favorito', isEqualTo: true).snapshots(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Text('Erro ao carregar favoritos');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      }
-                      final favoritos = snapshot.data!.docs
-                          .where((doc) => doc['nome']
-                              .toString()
-                              .toLowerCase()
-                              .contains(filtroPesquisa))
-                          .toList();
+                      if (snapshot.hasError) return const Text('Erro ao carregar favoritos');
+                      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
-                      if (favoritos.isEmpty) {
-                        return const Text('Nenhum favorito ainda.');
-                      }
+                      final favoritos = snapshot.data!.docs.where((doc) => doc['nome'].toString().toLowerCase().contains(filtroPesquisa)).toList();
+                      if (favoritos.isEmpty) return const Text('Nenhum favorito ainda.');
 
-                      return Column(
-                        children: favoritos.map((contato) {
-                          return _buildContatoCard(contato, true);
-                        }).toList(),
-                      );
+                      return Column(children: favoritos.map((contato) => _buildContatoCard(contato, true)).toList());
                     },
                   ),
-
                   const SizedBox(height: 20),
                   const Divider(),
-                  const Text(
-                    'Seus Contatos',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  const Text('Seus Contatos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
-
-                  // 👤 Lista de contatos normais
                   StreamBuilder<QuerySnapshot>(
-                    stream: contatosRef
-                        .where('uid', isEqualTo: usuario?.uid)
-                        .where('favorito', isEqualTo: false)
-                        .snapshots(),
+                    stream: contatosRef.where('uid', isEqualTo: usuario?.uid).where('favorito', isEqualTo: false).snapshots(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Text('Erro ao carregar contatos');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
-                      }
+                      if (snapshot.hasError) return const Text('Erro ao carregar contatos');
+                      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
-                      final docs = snapshot.data!.docs
-                          .where((doc) => doc['nome']
-                              .toString()
-                              .toLowerCase()
-                              .contains(filtroPesquisa))
-                          .toList();
-
-                      if (docs.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            'Nenhum contato adicionado ainda.',
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                        );
-                      }
-
-                      return Column(
-                        children: docs.map((contato) {
-                          return _buildContatoCard(contato, false);
-                        }).toList(),
+                      final docs = snapshot.data!.docs.where((doc) => doc['nome'].toString().toLowerCase().contains(filtroPesquisa)).toList();
+                      if (docs.isEmpty) return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text('Nenhum contato adicionado ainda.', style: TextStyle(color: Colors.black54)),
                       );
+
+                      return Column(children: docs.map((contato) => _buildContatoCard(contato, false)).toList());
                     },
                   ),
                 ],
@@ -308,8 +277,6 @@ class _TelefonePageState extends State<TelefonePage> {
           ],
         ),
       ),
-
-      // 🔹 Botão flutuante menor e mais baixo
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton.extended(
@@ -321,30 +288,18 @@ class _TelefonePageState extends State<TelefonePage> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(
-                      controller: nomeController,
-                      decoration: const InputDecoration(labelText: 'Nome'),
-                    ),
-                    TextField(
-                      controller: numeroController,
-                      decoration: const InputDecoration(labelText: 'Número'),
-                      keyboardType: TextInputType.phone,
-                    ),
+                    TextField(controller: nomeController, decoration: const InputDecoration(labelText: 'Nome')),
+                    TextField(controller: numeroController, decoration: const InputDecoration(labelText: 'Número'), keyboardType: TextInputType.phone),
                   ],
                 ),
                 actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancelar'),
-                  ),
+                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
                   ElevatedButton(
                     onPressed: () {
                       _adicionarContato();
                       Navigator.pop(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00897B),
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00897B)),
                     child: const Text('Salvar'),
                   ),
                 ],
@@ -372,37 +327,19 @@ class _TelefonePageState extends State<TelefonePage> {
           backgroundColor: Color(0xFF00897B),
           child: Icon(Icons.person, color: Colors.white),
         ),
-        title: Text(
-          contato['nome'],
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        ),
+        title: Text(contato['nome'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
         subtitle: Text(contato['numero']),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(
-                contato['favorito'] == true
-                    ? Icons.star
-                    : Icons.star_border_outlined,
-                color: contato['favorito'] == true
-                    ? Colors.amber
-                    : Colors.grey,
-              ),
+              icon: Icon(contato['favorito'] == true ? Icons.star : Icons.star_border_outlined,
+                  color: contato['favorito'] == true ? Colors.amber : Colors.grey),
               onPressed: () => _alternarFavorito(contato),
             ),
-            IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blueAccent),
-              onPressed: () => _editarContato(contato),
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.redAccent),
-              onPressed: () => _excluirContato(contato),
-            ),
-            IconButton(
-              icon: const Icon(Icons.call, color: Color(0xFF00897B)),
-              onPressed: () => _ligar(contato['numero']),
-            ),
+            IconButton(icon: const Icon(Icons.edit, color: Colors.blueAccent), onPressed: () => _editarContato(contato)),
+            IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent), onPressed: () => _excluirContato(contato)),
+            IconButton(icon: const Icon(Icons.call, color: Color(0xFF00897B)), onPressed: () => _ligar(contato['numero'])),
           ],
         ),
       ),

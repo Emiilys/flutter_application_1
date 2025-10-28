@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/pages/bemEstar/humor_page.dart';
-import 'package:flutter_application_1/pages/bemEstar/metaspage.dart';// Caminho correto para o arquivo HumorPage
+import 'package:flutter_application_1/pages/bemEstar/metaspage.dart';
 import 'diaro_page.dart';
+
 class BemEstarPage extends StatefulWidget {
   const BemEstarPage({Key? key}) : super(key: key);
 
@@ -25,7 +26,6 @@ class _BemEstarPageState extends State<BemEstarPage> {
   final CollectionReference agendamentosCollection =
       FirebaseFirestore.instance.collection('agendamentos');
 
-  // Map de cores por categoria
   final Map<String, Color> categoriaColors = {
     'Pessoal': Colors.purple,
     'Medicação': Colors.red,
@@ -38,25 +38,69 @@ class _BemEstarPageState extends State<BemEstarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF00C27D),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF00C27D),
-        elevation: 0,
-        title: Row(
-          children: const [
-            Icon(Icons.favorite, color: Colors.white),
-            SizedBox(width: 8),
-            Text(
-              'Bem Estar',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+
+      // 🔹 Cabeçalho personalizado
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF00C27D), Color(0xFF00E48C)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          ],
+            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: const Icon(Icons.favorite, color: Color(0xFF00C27D)),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        'Bem Estar',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Monitore seu bem-estar e dia a dia',
+                  style: TextStyle(fontSize: 14, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
+
       body: Column(
         children: [
           // Guias do topo
           Container(
-            color: const Color(0xFF00C27D),
+            color: Colors.transparent,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -64,38 +108,46 @@ class _BemEstarPageState extends State<BemEstarPage> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      showForm = false; // mostra agenda
+                      showForm = false;
                     });
                   },
-                  child: const Text('Agenda',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Agenda',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 GestureDetector(
-                 onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const HumorPage()),
-                      );
-                    },
-                  child: const Text('Humor',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const HumorPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Humor',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const DiarioPage()),
                     );
                   },
-                  child: const Text('Diário',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Diário',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                 GestureDetector(
-                  onTap: (){
-                    Navigator.of( context).push(
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const MetasPage()),
                     );
                   },
-                  child: const Text('Metas',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Metas',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
@@ -120,6 +172,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
+  // 🔹 Mantém a lista de agendamentos igual
   Widget _buildAgendaList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -186,7 +239,6 @@ class _BemEstarPageState extends State<BemEstarPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Bolinha de concluir
                               GestureDetector(
                                 onTap: () async {
                                   await agendamentosCollection.doc(doc.id).update({
@@ -207,7 +259,6 @@ class _BemEstarPageState extends State<BemEstarPage> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              // Conteúdo do agendamento
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

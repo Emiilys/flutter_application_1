@@ -6,34 +6,59 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff9c79d8),
-        title: const Text('Chat com Especialistas'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(Icons.chat_bubble_outline),
-          )
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(40),
-          child: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: const Text(
-              'Tire suas dúvidas com profissionais qualificados',
-              style: TextStyle(
-                color: Color.fromARGB(238, 255, 255, 255),
-                fontSize: 18,
-              ),
+      backgroundColor: const Color(0xfff5f5f5),
+
+      // 🔹 AppBar com emoji e descrição
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(140),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xff9c79d8),
+          flexibleSpace: Container(
+            padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: const Icon(Icons.smart_toy, color: Color(0xff9c79d8)), // robozinho
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Chat com Especialistas',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Tire suas dúvidas com profissionais qualificados',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+
       body: Column(
         children: [
           // Título perguntas rápidas
@@ -95,7 +120,7 @@ class ChatPage extends StatelessWidget {
             ),
           ),
 
-          // Mensagem de boas vindas (fake chat bubble)
+          // Mensagem de boas-vindas
           Container(
             width: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -109,7 +134,10 @@ class ChatPage extends StatelessWidget {
               children: const [
                 Text(
                   'Olá! Sou um especialista em cuidados. Como posso ajudá-lo hoje?',
-                   style: TextStyle(fontSize: 20, color: Color.fromARGB(197, 0, 0, 0)),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(197, 0, 0, 0),
+                  ),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -148,9 +176,7 @@ class ChatPage extends StatelessWidget {
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: () {
-                      // Aqui ficará a ação para enviar a pergunta (não funcional)
-                    },
+                    onPressed: () {},
                   ),
                 )
               ],

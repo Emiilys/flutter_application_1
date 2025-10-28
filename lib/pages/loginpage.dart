@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
-import 'register_page.dart'; // (a gente vai criar essa página depois)
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,13 +29,11 @@ class _LoginPageState extends State<LoginPage> {
     try {
       setState(() => isLoading = true);
 
-      // 🔹 Faz login com Firebase Auth
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: senha,
       );
 
-      // 🔹 Se o login deu certo, vai para o menu (HomePage)
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -70,45 +68,58 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F9F9),
+      backgroundColor: const Color(0xFFE0F2F1),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: [Colors.white.withOpacity(0.8), Colors.white.withOpacity(0.5)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Colors.black26,
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
               ],
+              border: Border.all(color: Colors.white30, width: 1.5),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Imagem e título
+                // Logo maior com sombra
                 Container(
-                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Image.asset(
-                    'assets/logo.jpeg',
-                    height: 90,
-                    width: 90,
-                    fit: BoxFit.contain,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/logo.jpeg',
+                      height: 120,
+                      width: 120,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
                 const Text(
                   "EMC",
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 34,
                     fontWeight: FontWeight.bold,
                     color: Color(0xff00835a),
                   ),
@@ -121,43 +132,27 @@ class _LoginPageState extends State<LoginPage> {
                     color: Color(0xff00835a),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
-                // Campos de texto
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: "Email",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
+                // Campos de texto com borda mais suave
+                _buildTextField(emailController, "Email", false),
                 const SizedBox(height: 16),
-                TextField(
-                  controller: senhaController,
-                  decoration: InputDecoration(
-                    hintText: "Senha",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 24),
+                _buildTextField(senhaController, "Senha", true),
+                const SizedBox(height: 32),
 
-                // Botão de login
+                // Botão tipo gelatina
                 SizedBox(
                   width: double.infinity,
-                  height: 48,
+                  height: 50,
                   child: ElevatedButton(
                     onPressed: isLoading ? null : fazerLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff00835a),
+                      backgroundColor: const Color(0xff00835a).withOpacity(0.9),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
+                      elevation: 6,
+                      shadowColor: Colors.black38,
                     ),
                     child: isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
@@ -165,32 +160,50 @@ class _LoginPageState extends State<LoginPage> {
                             "Entrar",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 18,
+                              color: Colors.white,
                             ),
                           ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
                 GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RegisterPage()),
-                  );
-                },
-                child: const Text(
-                  "Não tem conta? Cadastre-se",
-                  style: TextStyle(
-                    color: Color(0xff00835a),
-                    fontWeight: FontWeight.w600,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Não tem conta? Cadastre-se",
+                    style: TextStyle(
+                      color: Color(0xff00835a),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-               ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // 🔹 Função para criar campos de texto
+  Widget _buildTextField(TextEditingController controller, String hint, bool obscure) {
+    return TextField(
+      controller: controller,
+      obscureText: obscure,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
   }

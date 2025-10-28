@@ -1,118 +1,152 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PrimeirosSocorrosPage extends StatelessWidget {
-  const PrimeirosSocorrosPage({super.key});
+  const PrimeirosSocorrosPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xfffff5f2),
       appBar: AppBar(
-        backgroundColor: const Color(0xffff6b6b),
-        title: const Text('Primeiros Socorros'),
+        toolbarHeight: 140,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xffff6b6b), Color(0xffff8e53)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.arrow_back, color: Colors.white),
+                  ),
+                  const SizedBox(width: 12),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: const Icon(Icons.add, color: Colors.red),
+                  ),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: Text(
+                      'Primeiros Socorros',
+                      style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Guia rápido de emergência',
+                style: TextStyle(fontSize: 14, color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Campo de busca
+            // Barra de pesquisa customizada
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              margin: const EdgeInsets.only(top: 12, bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.shade100),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.blue, width: 1.5),
               ),
-              child: const TextField(
-                enabled: false, // por enquanto não funcional
-                decoration: InputDecoration(
-                  icon: Icon(Icons.search, color: Colors.blue),
-                  hintText: 'Buscar situação de emergência...',
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Categorias de emergência
-            const Text(
-              'Categorias de Emergência',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              children: [
-                _emergencyButton('Problemas Cardíacos', Icons.favorite, Colors.red.shade100),
-                _emergencyButton('Respiração & Ansiedade', Icons.air, Colors.blue.shade100),
-                _emergencyButton('Ferimentos & Trauma', Icons.bloodtype, Colors.orange.shade100),
-                _emergencyButton('Problemas Neurológicos', Icons.psychology, Colors.purple.shade100),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Telefones de emergência
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.red.shade50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('Ligar para Emergência', style: TextStyle(fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  _EmergencyPhone(number: '192', name: 'SAMU', description: 'Emergências médicas'),
-                  _EmergencyPhone(number: '193', name: 'Bombeiros', description: 'Incêndio e resgates'),
-                  _EmergencyPhone(number: '190', name: 'Polícia', description: 'Emergências policiais'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Legenda de níveis de gravidade
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
                 children: [
-                  const Text('Níveis de Gravidade', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      _LevelIndicator(color: Colors.red, label: 'Crítico'),
-                      _LevelIndicator(color: Colors.orange, label: 'Alto'),
-                      _LevelIndicator(color: Colors.yellow, label: 'Médio'),
-                      _LevelIndicator(color: Colors.green, label: 'Baixo'),
-                    ],
+                  const Icon(Icons.search, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Pesquisar...',
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
 
-            // Lembrete
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                'Lembre-se sempre: Mantenha a calma, avalie a situação, ligue para a emergência se necessário e preste primeiros socorros com segurança.',
-                style: TextStyle(color: Colors.black87),
-              ),
+            // Categorias
+            const Text(
+              'Categorias de Emergência',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              crossAxisCount: 2,
+              childAspectRatio: 3,
+              children: [
+                _categoriaCard('Problemas Cardíacos', '❤️',
+                    Colors.red.shade50, Colors.red, Colors.red.shade700),
+                _categoriaCard('Respiração & Ansiedade', '💨',
+                    Colors.blue.shade50, Colors.blue, Colors.blue.shade700),
+                _categoriaCard('Ferimentos & Trauma', '🩸',
+                    Colors.orange.shade50, Colors.orange, Colors.orange.shade700),
+                _categoriaCard('Problemas Neurológicos', '🧠',
+                    Colors.purple.shade50, Colors.purple, Colors.purple.shade700),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Telefones de emergência
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                _EmergencyCard('📞', '193', 'Bombeiros'),
+                _EmergencyCard('📞', '190', 'Polícia'),
+                _EmergencyCard('📞', '192', 'SAMU'),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Lembretes
+            const Text(
+              'Lembre-se sempre:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                _LembreteCard(
+                    '1. Avalie a situação', '🚨', Colors.orange, 'Verifique se é seguro se aproximar'),
+                _LembreteCard(
+                    '2. Ligue para emergência', '📞', Colors.green, '192 - SAMU sempre primeiro'),
+                _LembreteCard(
+                    '3. Preste os primeiros socorros', '🤝', Colors.orangeAccent, 'Siga as instruções das categorias'),
+              ],
             ),
           ],
         ),
@@ -120,73 +154,140 @@ class PrimeirosSocorrosPage extends StatelessWidget {
     );
   }
 
-  Widget _emergencyButton(String title, IconData icon, Color color) {
-    return ElevatedButton(
-      onPressed: null, // por enquanto não funcional
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.black87,
-        padding: const EdgeInsets.all(12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  Widget _categoriaCard(String title, String emoji, Color bgColor,
+      Color emojiBg, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: textColor, width: 1.5),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 36),
-          const SizedBox(height: 8),
-          Text(title, textAlign: TextAlign.center),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmergencyPhone extends StatelessWidget {
-  final String number;
-  final String name;
-  final String description;
-
-  const _EmergencyPhone({
-    required this.number,
-    required this.name,
-    required this.description,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          const Icon(Icons.phone, color: Colors.red),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$number - $name', style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(description, style: const TextStyle(fontSize: 12)),
-            ],
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2))
+              ],
+            ),
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              emoji,
+              style: GoogleFonts.notoColorEmoji(fontSize: 28),
+            ),
           ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(title,
+                    style: GoogleFonts.notoColorEmoji(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: textColor)),
+                Text('Clique para ver mais',
+                    style: GoogleFonts.notoColorEmoji(
+                        fontSize: 12, color: textColor.withOpacity(0.7))),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios, size: 16),
         ],
       ),
     );
   }
 }
 
-class _LevelIndicator extends StatelessWidget {
+class _LembreteCard extends StatelessWidget {
+  final String title;
+  final String emoji;
   final Color color;
-  final String label;
+  final String subtitle;
 
-  const _LevelIndicator({required this.color, required this.label});
+  const _LembreteCard(this.title, this.emoji, this.color, this.subtitle);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(width: 20, height: 20, color: color),
-        const SizedBox(width: 4),
-        Text(label),
-      ],
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color, width: 1.5),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                      offset: Offset(0, 2))
+                ],
+              ),
+              child: Text(emoji, style: GoogleFonts.notoColorEmoji(fontSize: 28)),
+            ),
+            const SizedBox(height: 8),
+            Text(title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 14, color: color)),
+            const SizedBox(height: 4),
+            Text(subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, color: Colors.white)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmergencyCard extends StatelessWidget {
+  final String emoji;
+  final String number;
+  final String description;
+
+  const _EmergencyCard(this.emoji, this.number, this.description);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Text(emoji, style: GoogleFonts.notoColorEmoji(fontSize: 28)),
+            const SizedBox(height: 4),
+            Text(number,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            const SizedBox(height: 2),
+            Text(description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, color: Colors.white)),
+          ],
+        ),
+      ),
     );
   }
 }
