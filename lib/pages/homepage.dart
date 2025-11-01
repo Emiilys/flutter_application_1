@@ -3,10 +3,11 @@ import 'package:flutter_application_1/pages/enderecosImportantes/enderecospage.d
 import 'loginpage.dart';
 import 'profilepage.dart';
 import 'chat/chatpage.dart';
-import 'fichaSaude/ficha_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'telefoneEmergencia/telefonepage.dart';
 import 'primeirosocorrospage.dart';
 import 'bemEstar/bem_estar_page.dart';
+import 'fichaSaude/ficha_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -216,11 +217,22 @@ class HomePage extends StatelessWidget {
                         iconBackgroundColor: const Color(0xfff979c1),
                         iconColor: Colors.white,
                         onTap: () {
+                        final user = FirebaseAuth.instance.currentUser;
+
+                        if (user != null) {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const FichaPage()),
+                            MaterialPageRoute(
+                              builder: (_) => FichaPage(
+                                usuarioLogado: {
+                                  "uid": user.uid,
+                                  "email": user.email ?? "",
+                                },
+                              ),
+                            ),
                           );
-                        },
-                      ),
+                        }
+                      },
+                    ),
                     ],
                   ),
                 ],

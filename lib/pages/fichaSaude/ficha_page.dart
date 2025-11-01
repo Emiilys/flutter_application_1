@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'minhafichapage.dart'; // ⬅️ importe sua tela "MinhaFichaPage"
 
 class FichaPage extends StatelessWidget {
-  const FichaPage({super.key});
+  final Map<String, String> usuarioLogado; // ⬅️ adiciona essa variável
+
+  const FichaPage({super.key, required this.usuarioLogado}); // ⬅️ receba ela no construtor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEFF3F9),
-
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(140),
         child: AppBar(
@@ -69,6 +71,7 @@ class FichaPage extends StatelessWidget {
             children: [
               // Card 1 - Minha Ficha
               _buildFichaCard(
+                context: context,
                 color: const Color(0xFF3A7BD5),
                 icon: Icons.person_outline,
                 title: "Minha Ficha",
@@ -79,6 +82,7 @@ class FichaPage extends StatelessWidget {
 
               // Card 2 - Ficha para Idosos
               _buildFichaCard(
+                context: context,
                 color: const Color(0xFF4A90E2),
                 icon: Icons.elderly_rounded,
                 title: "Ficha para Idosos",
@@ -89,6 +93,7 @@ class FichaPage extends StatelessWidget {
 
               // Card 3 - Ficha para Bebês
               _buildFichaCard(
+                context: context,
                 color: const Color(0xFF6EC6FF),
                 icon: Icons.child_care_rounded,
                 title: "Ficha para Bebês",
@@ -103,52 +108,66 @@ class FichaPage extends StatelessWidget {
   }
 
   Widget _buildFichaCard({
+    required BuildContext context,
     required Color color,
     required IconData icon,
     required String title,
     required String description,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blueGrey.withOpacity(0.1),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 34,
-            backgroundColor: color.withOpacity(0.15),
-            child: Icon(icon, color: color, size: 38),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: color,
+    return GestureDetector(
+      onTap: () {
+        if (title == "Minha Ficha") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MinhaFichaPage(usuarioLogado: usuarioLogado),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            description,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: Colors.blueGrey[600],
-              fontSize: 14,
-              height: 1.4,
+          );
+        }
+        // você pode adicionar outras navegações aqui se quiser
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blueGrey.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 34,
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, color: color, size: 38),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                color: Colors.blueGrey[600],
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
