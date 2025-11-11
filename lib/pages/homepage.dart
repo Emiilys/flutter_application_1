@@ -5,7 +5,7 @@ import 'profilepage.dart';
 import 'chat/chatpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'telefoneEmergencia/telefonepage.dart';
-import 'primeirosocorrospage.dart';
+import 'primeirosocorros/primeirosocorrospage.dart';
 import 'bemEstar/bem_estar_page.dart';
 import 'fichaSaude/ficha_page.dart';
 
