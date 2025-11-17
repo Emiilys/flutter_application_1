@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TelefonePage extends StatefulWidget {
   const TelefonePage({super.key});
@@ -53,8 +52,9 @@ class _TelefonePageState extends State<TelefonePage> {
   }
 
   void _editarContato(DocumentSnapshot contato) {
-    final nomeEditController = TextEditingController(text: contato['nome']);
-    final numeroEditController = TextEditingController(text: contato['numero']);
+    final data = contato.data() as Map<String, dynamic>;
+    final nomeEditController = TextEditingController(text: data['nome'] ?? '');
+    final numeroEditController = TextEditingController(text: data['numero'] ?? '');
 
     showDialog(
       context: context,
@@ -63,15 +63,8 @@ class _TelefonePageState extends State<TelefonePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: nomeEditController,
-              decoration: const InputDecoration(labelText: 'Nome'),
-            ),
-            TextField(
-              controller: numeroEditController,
-              decoration: const InputDecoration(labelText: 'Número'),
-              keyboardType: TextInputType.phone,
-            ),
+            TextField(controller: nomeEditController, decoration: const InputDecoration(labelText: 'Nome')),
+            TextField(controller: numeroEditController, decoration: const InputDecoration(labelText: 'Número'), keyboardType: TextInputType.phone),
           ],
         ),
         actions: [
@@ -113,7 +106,8 @@ class _TelefonePageState extends State<TelefonePage> {
   }
 
   void _alternarFavorito(DocumentSnapshot contato) async {
-    final favoritoAtual = contato['favorito'] ?? false;
+    final data = contato.data() as Map<String, dynamic>;
+    final favoritoAtual = data['favorito'] ?? false;
     await firestore.collection('contatos').doc(contato.id).update({'favorito': !favoritoAtual});
   }
 
@@ -122,9 +116,7 @@ class _TelefonePageState extends State<TelefonePage> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Não foi possível ligar para $numero')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Não foi possível ligar para $numero')));
     }
   }
 
@@ -135,148 +127,158 @@ class _TelefonePageState extends State<TelefonePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xfffff5f2),
-      // 🔹 Cabeçalho personalizado com emoji e descrição
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(140),
         child: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF00897B), Color(0xFF26A69A)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: LinearGradient(colors: [Color(0xFF00897B), Color(0xFF26A69A)], begin: Alignment.topLeft, end: Alignment.bottomRight),
             ),
             padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back, color: Colors.white),
-                    ),
-                    const SizedBox(width: 12),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: const Icon(Icons.phone, color: Color(0xFF00897B)),
-                    ),
-                    const SizedBox(width: 12),
-                    Flexible(
-                      child: Text(
-                        'Telefones de Emergência',
-                        style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Encontre e ligue rapidamente para serviços essenciais',
-                  style: TextStyle(fontSize: 14, color: Colors.white70),
-                ),
-              ],
-            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                GestureDetector(onTap: () => Navigator.pop(context), child: const Icon(Icons.arrow_back, color: Colors.white)),
+                const SizedBox(width: 12),
+                Container(padding: const EdgeInsets.all(8), decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white), child: const Icon(Icons.phone, color: Color(0xFF00897B))),
+
+                const SizedBox(width: 12),
+                const Expanded(child: Text('Telefones de Emergência', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white))),
+              ]),
+              const SizedBox(height: 8),
+              const Text('Encontre e ligue rapidamente para serviços essenciais', style: TextStyle(fontSize: 14, color: Colors.white70)),
+            ]),
           ),
         ),
       ),
+
+
+
       body: Padding(
         padding: const EdgeInsets.only(bottom: 70),
         child: Column(
           children: [
-            // 🔍 Campo de pesquisa
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
                 controller: searchController,
-                decoration: InputDecoration(
-                  hintText: 'Pesquisar por nome...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                decoration: InputDecoration(hintText: 'Pesquisar por nome...', prefixIcon: const Icon(Icons.search), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                 onChanged: (value) {
                   setState(() => filtroPesquisa = value.toLowerCase());
                 },
               ),
             ),
+
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 children: [
                   const Text('Emergências Oficiais', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
+
                   ...contatosFixos.map((c) => Card(
                         color: Colors.red[50],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: Colors.red.shade100),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.red.shade100)),
                         child: ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: Colors.redAccent,
-                            child: Icon(Icons.local_phone, color: Colors.white),
-                          ),
+                          leading: const CircleAvatar(backgroundColor: Colors.redAccent, child: Icon(Icons.local_phone, color: Colors.white)),
                           title: Text(c['nome']!, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade700)),
                           subtitle: Text(c['numero']!),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.call, color: Colors.redAccent),
-                            onPressed: () => _ligar(c['numero']!),
-                          ),
+                          trailing: IconButton(icon: const Icon(Icons.call, color: Colors.redAccent), onPressed: () => _ligar(c['numero']!)),
                         ),
                       )),
+
                   const SizedBox(height: 20),
                   const Divider(),
                   const Text('Favoritos ⭐', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
-                  StreamBuilder<QuerySnapshot>(
-                    stream: contatosRef.where('uid', isEqualTo: usuario?.uid).where('favorito', isEqualTo: true).snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) return const Text('Erro ao carregar favoritos');
-                      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
-                      final favoritos = snapshot.data!.docs.where((doc) => doc['nome'].toString().toLowerCase().contains(filtroPesquisa)).toList();
-                      if (favoritos.isEmpty) return const Text('Nenhum favorito ainda.');
+                  if (usuario == null)
+                    const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Text('Faça login para ver seus contatos e favoritos.', style: TextStyle(color: Colors.black54)),
+                    )
+                  else
+                    StreamBuilder<QuerySnapshot>(
+                      stream: contatosRef.where('uid', isEqualTo: usuario.uid).snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Text('Erro ao carregar favoritos: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
+                          );
+                        }
 
-                      return Column(children: favoritos.map((contato) => _buildContatoCard(contato, true)).toList());
-                    },
-                  ),
+                        // 🔥 CORREÇÃO PRINCIPAL
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+
+                        final allDocs = snapshot.data!.docs;
+
+                        final favoritos = allDocs.where((doc) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          final favorito = data['favorito'] ?? false;
+                          final nome = (data['nome'] ?? '').toString().toLowerCase();
+                          return favorito == true && nome.contains(filtroPesquisa);
+                        }).toList();
+
+                        if (favoritos.isEmpty) {
+                          return const Text('Nenhum favorito ainda.');
+                        }
+
+                        return Column(children: favoritos.map((c) => _buildContatoCard(c)).toList());
+                      },
+                    ),
+
                   const SizedBox(height: 20),
                   const Divider(),
                   const Text('Seus Contatos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 8),
-                  StreamBuilder<QuerySnapshot>(
-                    stream: contatosRef.where('uid', isEqualTo: usuario?.uid).where('favorito', isEqualTo: false).snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) return const Text('Erro ao carregar contatos');
-                      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
-                      final docs = snapshot.data!.docs.where((doc) => doc['nome'].toString().toLowerCase().contains(filtroPesquisa)).toList();
-                      if (docs.isEmpty) return const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text('Nenhum contato adicionado ainda.', style: TextStyle(color: Colors.black54)),
-                      );
+                  if (usuario == null)
+                    const SizedBox.shrink()
+                  else
+                    StreamBuilder<QuerySnapshot>(
+                      stream: contatosRef.where('uid', isEqualTo: usuario.uid).snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Text('Erro ao carregar contatos: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
+                          );
+                        }
 
-                      return Column(children: docs.map((contato) => _buildContatoCard(contato, false)).toList());
-                    },
-                  ),
+                        // 🔥 CORREÇÃO PRINCIPAL 2
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+
+                        final allDocs = snapshot.data!.docs;
+
+                        final docs = allDocs.where((doc) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          final favorito = data['favorito'] ?? false;
+                          final nome = (data['nome'] ?? '').toString().toLowerCase();
+                          return favorito == false && nome.contains(filtroPesquisa);
+                        }).toList();
+
+                        if (docs.isEmpty) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text('Nenhum contato adicionado ainda.', style: TextStyle(color: Colors.black54)),
+                          );
+                        }
+
+                        return Column(children: docs.map((c) => _buildContatoCard(c)).toList());
+                      },
+                    ),
                 ],
               ),
             ),
           ],
         ),
       ),
+
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FloatingActionButton.extended(
@@ -315,33 +317,25 @@ class _TelefonePageState extends State<TelefonePage> {
     );
   }
 
-  Widget _buildContatoCard(DocumentSnapshot contato, bool favorito) {
+  Widget _buildContatoCard(DocumentSnapshot contato) {
+    final data = contato.data() as Map<String, dynamic>;
+    final nome = data['nome'] ?? '';
+    final numero = data['numero'] ?? '';
+    final favorito = data['favorito'] ?? false;
+
     return Card(
       color: Colors.green[50],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Colors.green.shade100),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.green.shade100)),
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Color(0xFF00897B),
-          child: Icon(Icons.person, color: Colors.white),
-        ),
-        title: Text(contato['nome'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-        subtitle: Text(contato['numero']),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: Icon(contato['favorito'] == true ? Icons.star : Icons.star_border_outlined,
-                  color: contato['favorito'] == true ? Colors.amber : Colors.grey),
-              onPressed: () => _alternarFavorito(contato),
-            ),
-            IconButton(icon: const Icon(Icons.edit, color: Colors.blueAccent), onPressed: () => _editarContato(contato)),
-            IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent), onPressed: () => _excluirContato(contato)),
-            IconButton(icon: const Icon(Icons.call, color: Color(0xFF00897B)), onPressed: () => _ligar(contato['numero'])),
-          ],
-        ),
+        leading: const CircleAvatar(backgroundColor: Color(0xFF00897B), child: Icon(Icons.person, color: Colors.white)),
+        title: Text(nome, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+        subtitle: Text(numero),
+        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+          IconButton(icon: Icon(favorito ? Icons.star : Icons.star_border_outlined, color: favorito ? Colors.amber : Colors.grey), onPressed: () => _alternarFavorito(contato)),
+          IconButton(icon: const Icon(Icons.edit, color: Colors.blueAccent), onPressed: () => _editarContato(contato)),
+          IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent), onPressed: () => _excluirContato(contato)),
+          IconButton(icon: const Icon(Icons.call, color: Color(0xFF00897B)), onPressed: () => _ligar(numero)),
+        ]),
       ),
     );
   }
