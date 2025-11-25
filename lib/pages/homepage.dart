@@ -8,6 +8,7 @@ import 'telefoneEmergencia/telefonepage.dart';
 import 'primeirosocorros/primeiros_socorros_page.dart';
 import 'bemEstar/bem_estar_page.dart';
 import 'fichaSaude/ficha_page.dart';
+import 'package:flutter_application_1/pages/configuracao_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,7 +32,7 @@ class HomePage extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // GRID RESPONSIVO
+                  
                   LayoutBuilder(
                     builder: (context, constraints) {
                       int crossCount = constraints.maxWidth < 380
@@ -141,9 +142,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // ==============================
-  // 🔹 HEADER RESPONSIVO
-  // ==============================
+ 
   Widget _buildHeader(BuildContext context, double largura) {
     bool telaPequena = largura < 380;
 
@@ -187,7 +186,7 @@ class HomePage extends StatelessWidget {
               ),
               const Spacer(),
 
-              // 🔹 Se a tela for pequena, vira um menu ↓↓↓
+             
               if (telaPequena)
                 PopupMenuButton(
                   offset: const Offset(0, 50),
@@ -197,7 +196,12 @@ class HomePage extends StatelessWidget {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const ProfilePage()));
                     }),
-                    _buildMenuItem("Configurações", Icons.settings_outlined, () {}),
+                    _buildMenuItem("Configurações", Icons.settings_outlined, () {
+                     Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ConfiguracaoPage()),
+                        );
+                      }),
                     _buildMenuItem("Notificações", Icons.notifications_none, () {}),
                     _buildMenuItem("Sair", Icons.logout, () {
                       Navigator.pushReplacement(context,
@@ -206,7 +210,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
 
-              // 🔹 Se for tela normal, mostra os botões
+            
               if (!telaPequena)
                 Row(
                   children: [
@@ -214,7 +218,12 @@ class HomePage extends StatelessWidget {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const ProfilePage()));
                     }),
-                    _headerBtn(Icons.settings_outlined, () {}),
+                    _headerBtn(Icons.settings_outlined, () {
+                   Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (_) => const ConfiguracaoPage()),
+                     );
+                          }),
                     _headerBtn(Icons.notifications_none, () {}),
                     _headerBtn(Icons.logout, () {
                       Navigator.pushReplacement(context,
@@ -256,7 +265,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // BOX DE BOAS-VINDAS
+  
   Widget _welcomeBox() {
     return Container(
       width: double.infinity,
@@ -281,7 +290,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // CARD PADRÃO
+ 
   Widget _buildCard({
     required Color color,
     required IconData icon,
