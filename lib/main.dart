@@ -5,6 +5,7 @@ import 'pages/firebase_options.dart';
 import 'pages/loginpage.dart';
 import 'pages/homepage.dart';
 import 'notification_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'EMC - Emergency Center!',
       theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
         primarySwatch: Colors.green,
         useMaterial3: true,
       ),

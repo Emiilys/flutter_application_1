@@ -6,9 +6,9 @@ import 'chat/chatpage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'telefoneEmergencia/telefonepage.dart';
 import 'primeirosocorros/primeiros_socorros_page.dart';
-import 'bemEstar/bem_estar_page.dart';
 import 'fichaSaude/ficha_page.dart';
 import 'package:flutter_application_1/pages/configuracao_page.dart';
+import 'bemestar/bem_estar_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,7 +21,6 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           _buildHeader(context, largura),
-
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(12),
@@ -29,10 +28,7 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _welcomeBox(),
-
                   const SizedBox(height: 16),
-
-                  
                   LayoutBuilder(
                     builder: (context, constraints) {
                       int crossCount = constraints.maxWidth < 380
@@ -41,13 +37,16 @@ class HomePage extends StatelessWidget {
                               ? 2
                               : 3;
 
+                      double aspectRatio =
+                          constraints.maxWidth < 380 ? 1.4 : 1.1;
+
                       return GridView.count(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         crossAxisCount: crossCount,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        childAspectRatio: 1.1,
+                        childAspectRatio: aspectRatio,
                         children: [
                           _buildCard(
                             color: const Color(0xffffe6e6),
@@ -56,8 +55,10 @@ class HomePage extends StatelessWidget {
                             subtitle: 'Contatos de emergência',
                             backgroundIcon: Icons.phone_in_talk,
                             iconBackgroundColor: const Color(0xffd45a58),
-                            onTap: () => Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => const TelefonePage())),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const TelefonePage())),
                           ),
                           _buildCard(
                             color: const Color(0xffe6f7e6),
@@ -66,8 +67,10 @@ class HomePage extends StatelessWidget {
                             subtitle: 'Cuidados pessoais',
                             backgroundIcon: Icons.favorite_outline,
                             iconBackgroundColor: const Color(0xff65c268),
-                            onTap: () => Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => const BemEstarPage())),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const BemEstarPage())),
                           ),
                           _buildCard(
                             color: const Color(0xffe6f1ff),
@@ -79,7 +82,8 @@ class HomePage extends StatelessWidget {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const PrimeirosSocorrosPage())),
+                                    builder: (_) =>
+                                        const PrimeirosSocorrosPage())),
                           ),
                           _buildCard(
                             color: const Color(0xfff9f0e6),
@@ -142,7 +146,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
- 
   Widget _buildHeader(BuildContext context, double largura) {
     bool telaPequena = largura < 380;
 
@@ -178,56 +181,64 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('EMC',
-                      style: TextStyle(fontSize: 27,
-                          fontWeight: FontWeight.bold, color: Colors.white)),
+                      style: TextStyle(
+                          fontSize: 27,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
                   Text('Emergency Center',
                       style: TextStyle(fontSize: 14, color: Colors.white70)),
                 ],
               ),
               const Spacer(),
-
-             
               if (telaPequena)
                 PopupMenuButton(
                   offset: const Offset(0, 50),
                   icon: const Icon(Icons.more_vert, color: Colors.white),
                   itemBuilder: (_) => [
                     _buildMenuItem("Perfil", Icons.person_outline, () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const ProfilePage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const ProfilePage()));
                     }),
                     _buildMenuItem("Configurações", Icons.settings_outlined, () {
-                     Navigator.push(
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const ConfiguracaoPage()),
-                        );
-                      }),
+                        MaterialPageRoute(
+                            builder: (_) => const ConfiguracaoPage()),
+                      );
+                    }),
                     _buildMenuItem("Notificações", Icons.notifications_none, () {}),
                     _buildMenuItem("Sair", Icons.logout, () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => const LoginPage()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const LoginPage()));
                     }),
                   ],
                 ),
-
-            
               if (!telaPequena)
                 Row(
                   children: [
                     _headerBtn(Icons.person_outline, () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => const ProfilePage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const ProfilePage()));
                     }),
                     _headerBtn(Icons.settings_outlined, () {
-                   Navigator.push(
-                   context,
-                   MaterialPageRoute(builder: (_) => const ConfiguracaoPage()),
-                     );
-                          }),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ConfiguracaoPage()),
+                      );
+                    }),
                     _headerBtn(Icons.notifications_none, () {}),
                     _headerBtn(Icons.logout, () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (_) => const LoginPage()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const LoginPage()));
                     }),
                   ],
                 )
@@ -265,7 +276,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  
   Widget _welcomeBox() {
     return Container(
       width: double.infinity,
@@ -278,8 +288,12 @@ class HomePage extends StatelessWidget {
         text: const TextSpan(
           style: TextStyle(color: Colors.black87),
           children: [
-            TextSpan(text: 'Olá! ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            WidgetSpan(child: Text('👋', style: TextStyle(fontSize: 18))),
+            TextSpan(
+                text: 'Olá! ',
+                style:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            WidgetSpan(
+                child: Text('👋', style: TextStyle(fontSize: 18))),
             TextSpan(
               text: '\nO que você precisa hoje?',
               style: TextStyle(fontSize: 14, color: Colors.black54),
@@ -290,7 +304,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
- 
   Widget _buildCard({
     required Color color,
     required IconData icon,
@@ -322,11 +335,14 @@ class HomePage extends StatelessWidget {
                 Icon(icon, size: 36, color: iconBackgroundColor),
                 const SizedBox(height: 20),
                 Text(title,
-                    style:
-                        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
-                Text(subtitle,
-                    style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                Expanded(
+                  child: Text(subtitle,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black54)),
+                ),
               ],
             ),
           ],

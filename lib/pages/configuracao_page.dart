@@ -110,7 +110,7 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
               child: Column(
                 children: const [
                   Text(
-                    "EMC - Emergency Medical Center",
+                    "EMC - Emergency Center",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.green,
