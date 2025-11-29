@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'minhafichapage.dart'; // ⬅️ importe sua tela "MinhaFichaPage"
+
+
+// importações das fichas
+import 'minhafichapage.dart';
+import 'ficha_outra_pessoa_bebe.dart';
+import 'ficha_outra_pessoa_idoso.dart'; // se ainda não existir, pode remover
 
 class FichaPage extends StatelessWidget {
-  final Map<String, String> usuarioLogado; // ⬅️ adiciona essa variável
+  final Map<String, String> usuarioLogado;
 
-  const FichaPage({super.key, required this.usuarioLogado}); // ⬅️ receba ela no construtor
+  const FichaPage({super.key, required this.usuarioLogado});
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +121,7 @@ class FichaPage extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
+        // Navegação corrigida!
         if (title == "Minha Ficha") {
           Navigator.push(
             context,
@@ -123,8 +129,23 @@ class FichaPage extends StatelessWidget {
               builder: (context) => MinhaFichaPage(usuarioLogado: usuarioLogado),
             ),
           );
+        } 
+        else if (title == "Ficha para Bebês") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FichaBebePage(),
+            ),
+          );
         }
-        // você pode adicionar outras navegações aqui se quiser
+        else if (title == "Ficha para Idosos") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FichaOutraPessoaIdosoPage(), // placeholder
+            ),
+          );
+        }
       },
       child: Container(
         width: double.infinity,
