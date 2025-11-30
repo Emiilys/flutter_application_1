@@ -10,7 +10,7 @@ class FichaOutraPessoaIdosoPage extends StatefulWidget {
 }
 
 class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
-  // ---------------- Controladores ----------------
+  //  controladores 
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController idadeController = TextEditingController();
   final TextEditingController condicoesController = TextEditingController();
@@ -20,7 +20,7 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
   final TextEditingController responsavel1Controller = TextEditingController();
   final TextEditingController responsavel2Controller = TextEditingController();
 
-  // ---------------- UI ----------------
+  //  UI 
   final Color temaVioleta = const Color(0xFF9C27B0); // Cor fixa violeta
   bool _modoEdicao = false; // Começa em visualização
   bool _manualExpanded = false;
@@ -46,7 +46,7 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
     super.dispose();
   }
 
-  // ---------------- Firestore ----------------
+  //  firestore 
   Future<void> _carregarFicha() async {
     setState(() => _loading = true);
     try {
@@ -121,7 +121,7 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
     }
   }
 
-  // ---------------- Helpers ----------------
+  //  helpers 
   Widget _animatedSection({required Widget child}) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -253,7 +253,7 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
     );
   }
 
-  // ---------------- Build ----------------
+  //  build 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(

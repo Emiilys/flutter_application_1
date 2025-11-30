@@ -21,7 +21,7 @@ class RespiracaoAnsiedadePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Header
+              // header
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 decoration: const BoxDecoration(
@@ -56,12 +56,12 @@ class RespiracaoAnsiedadePage extends StatelessWidget {
                 ),
               ),
 
-              // Legend
+              // legend
               LegendRow(items: legend),
 
               const SizedBox(height: 8),
 
-              // Reminder card (breathing technique)
+              // reminder card (breathing technique)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
@@ -89,7 +89,7 @@ class RespiracaoAnsiedadePage extends StatelessWidget {
 
               const SizedBox(height: 18),
 
-              // Section title
+              // section title
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Align(
@@ -101,7 +101,7 @@ class RespiracaoAnsiedadePage extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // Problems list (responsive cards)
+              // problems list (responsive cards)
               ResponsiveProblemCard(
                 emoji: '🤐',
                 titulo: 'Engasgo (Manobra de Heimlich)',

@@ -82,7 +82,7 @@ class ResponsiveProblemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Título + emoji
+          // título + emoji
           Row(
             children: [
               Text(
@@ -104,7 +104,7 @@ class ResponsiveProblemCard extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          // Gravidade
+          // gravidade
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -123,7 +123,7 @@ class ResponsiveProblemCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // O que fazer
+          // o que fazer
           Text(
             "O que fazer:",
             style: GoogleFonts.poppins(

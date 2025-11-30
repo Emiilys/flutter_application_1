@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Criar usuário principal
+  /// criar usuário principal
   Future<String> cadastrarUsuario({
     required String nomeCompleto,
     required String email,
@@ -17,7 +17,7 @@ class FirestoreService {
     return docRef.id; // retorna o ID do usuário criado
   }
 
-  /// Login (bem simples, só busca no Firestore)
+  /// login (busca no Firestore)
   Future<bool> login(String email, String senha) async {
     final query = await _db
         .collection("usuarios")

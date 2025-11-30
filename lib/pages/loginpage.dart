@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Logo maior com sombra
+                // logo maior com sombra
                 Container(
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -134,13 +134,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Campos de texto com borda mais suave
+                // campos de texto com borda mais suave
                 _buildTextField(emailController, "Email", false),
                 const SizedBox(height: 16),
                 _buildTextField(senhaController, "Senha", true),
                 const SizedBox(height: 32),
 
-                // Botão tipo gelatina
+                // botão tipo gelatina
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 🔹 Função para criar campos de texto
+  // função para criar campos de texto
   Widget _buildTextField(TextEditingController controller, String hint, bool obscure) {
     return TextField(
       controller: controller,

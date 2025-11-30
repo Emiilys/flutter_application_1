@@ -49,7 +49,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     carregarFicha();
   }
 
-  // 🔹 Agora a ficha é buscada em fichas/minhaFicha/usuarios/{uid}
+  // agora a ficha é buscada em fichas/minhaFicha/usuarios/{uid}
   Future<void> carregarFicha() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -100,7 +100,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     }
   }
 
-  // 🔹 Agora salva em fichas/minhaFicha/usuarios/{uid}
+  //agora salva em fichas/minhaFicha/usuarios/{uid}
   Future<void> salvarFicha() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -358,7 +358,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
     );
   }
 
-  // ---------------- Widgets auxiliares ----------------
+  //  widgets auxiliares 
   Widget _buildSection({required String title, required List<Widget> children}) {
     return Container(
       width: double.infinity,

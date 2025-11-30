@@ -35,7 +35,7 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // TÍTULO DA SESSÃO
+            // titulo
             const Row(
               children: [
                 Icon(Icons.notifications_active, color: Colors.green),
@@ -53,7 +53,7 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
 
             const SizedBox(height: 20),
 
-            // CARD ÚNICO
+            // card unico
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
               decoration: BoxDecoration(
@@ -105,7 +105,7 @@ class _ConfiguracaoPageState extends State<ConfiguracaoPage> {
 
             const Spacer(),
 
-            // RODAPÉ CENTRALIZADO
+            // rodape centralizado
             Center(
               child: Column(
                 children: const [

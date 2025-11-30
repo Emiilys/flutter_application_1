@@ -41,7 +41,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
   FirebaseFirestore get _db => FirebaseFirestore.instance;
   User? get _user => FirebaseAuth.instance.currentUser;
 
-  // ---------------- util ----------------
+  //util
   bool _isSameDate(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
@@ -58,7 +58,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     return _db.collection('bemestar').doc(uid).collection('dias').doc(key);
   }
 
-  // ---------------- FIRESTORE ----------------
+  // firestore 
 
   /// Carrega o documento do dia. Se existir, retorna o mapa.
   /// Se não existir, retorna null (não cria).
@@ -116,7 +116,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
         SetOptions(merge: true));
   }
 
-  // ---------------- UI & integração ----------------
+  //UI e integração 
 
   @override
   void dispose() {
@@ -233,7 +233,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
-  // ---------------- CALENDAR ----------------
+  // calendar 
   Widget _buildCalendar() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -344,7 +344,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
-  // ---------------- DIÁRIO ----------------
+  // diario
   Widget _buildDiario() {
     if (_selectedDay == null) return const SizedBox.shrink();
     final key = _dateKey(_selectedDay!);
@@ -385,7 +385,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
-  // ---------------- METAS ----------------
+  // metas 
   Widget _buildMetas() {
     if (_selectedDay == null) return const SizedBox.shrink();
     final key = _dateKey(_selectedDay!);
@@ -503,7 +503,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
-  // ---------------- HUMOR ----------------
+  // humor 
   Widget _buildHumor() {
     if (_selectedDay == null) return const SizedBox.shrink();
     final key = _dateKey(_selectedDay!);
@@ -558,7 +558,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
     );
   }
 
-  // ---------------- helpers UI ----------------
+  // helpers UI
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,

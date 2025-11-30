@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializa Firebase normalmente
+  // inicializa Firebase normalmente
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    // ⏳ Inicializar notificações depois que a UI já está carregando
+    // inicializar notificações depois que a UI já está carregando
     Future.microtask(() async {
       try {
         await NotificationsService.initialize();

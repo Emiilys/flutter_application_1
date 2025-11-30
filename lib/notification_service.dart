@@ -5,7 +5,7 @@ class NotificationsService {
   static final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
-  // 🔧 Inicializar notificações
+  // inicializar notificações
   static Future<void> initialize() async {
     await Permission.notification.request();
 
@@ -19,7 +19,7 @@ class NotificationsService {
     await _plugin.initialize(settings);
   }
 
-  // 🔔 Método GENÉRICO — usado pelo botão
+  // método genérico — usado pelo botão
   static Future<void> showNotification({
     required String title,
     required String body,
@@ -43,7 +43,7 @@ class NotificationsService {
     );
   }
 
-  // 🔔 Teste rápido do switch
+  // método genérico — usado pelo botão
   static Future<void> enviarNotificacaoTeste() async {
     await showNotification(
       title: 'Notificação ativada!',

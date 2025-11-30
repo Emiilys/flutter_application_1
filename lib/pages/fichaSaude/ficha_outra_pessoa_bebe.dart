@@ -11,7 +11,7 @@ class FichaBebePage extends StatefulWidget {
 
 class _FichaBebePageState extends State<FichaBebePage>
     with SingleTickerProviderStateMixin {
-  // ---------------- Controladores ----------------
+  //  controllers 
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController idadeController = TextEditingController();
   final TextEditingController alergiasController = TextEditingController();
@@ -22,7 +22,7 @@ class _FichaBebePageState extends State<FichaBebePage>
   final TextEditingController responsavel1Controller = TextEditingController();
   final TextEditingController responsavel2Controller = TextEditingController();
 
-  // ---------------- Temas ----------------
+  //  temas 
   Color temaAtual = const Color(0xFFEFEFEF);
   final Color rosaBebe = const Color(0xFFF7C9D7);
   final Color azulBebe = const Color(0xFFC7DFF9);
@@ -33,20 +33,20 @@ class _FichaBebePageState extends State<FichaBebePage>
   String? tomaRemedios;
   String? andaSozinho;
 
-  // ---------------- Vacinas ----------------
+  //  vacinas 
   bool vacinaBCG = false;
   bool vacinaHepatiteB = false;
   bool vacinaPentavalente = false;
   bool vacinaPolio = false;
   bool vacinaRotavirus = false;
 
-  // ---------------- Marcos ----------------
+  //  marcos 
   bool marcoEngatinha = false;
   bool marcoSustentaCabeca = false;
   bool marcoSorri = false;
   bool marcoBalbucia = false;
 
-  // ---------------- UI / animações ----------------
+  //  UI / animações
   bool _loading = true;
   bool _manualExpanded = false;
   double _dropdownScale = 1.0;
@@ -72,7 +72,7 @@ class _FichaBebePageState extends State<FichaBebePage>
     super.dispose();
   }
 
-  // ---------------- Funções ----------------
+  //  funções 
   void _atualizarTemaPorGenero(String? genero) {
     setState(() {
       _dropdownScale = 0.95;
@@ -205,7 +205,7 @@ class _FichaBebePageState extends State<FichaBebePage>
     }
   }
 
-  // ---------------- Helpers de animação ----------------
+  //  helpers de animação 
   Widget _animatedSection({required Widget child, required int index}) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -225,7 +225,7 @@ class _FichaBebePageState extends State<FichaBebePage>
     );
   }
 
-  // ---------------- Build ----------------
+  //  build 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -355,7 +355,7 @@ class _FichaBebePageState extends State<FichaBebePage>
     );
   }
 
-  // ---------------- Widgets auxiliares ----------------
+  //  widgets auxiliares 
   Widget _buildSection({required String title, required List<Widget> children}) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),

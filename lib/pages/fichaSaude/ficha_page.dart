@@ -121,7 +121,7 @@ class FichaPage extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-        // Navegação corrigida!
+        // navegacao corrigida!!!
         if (title == "Minha Ficha") {
           Navigator.push(
             context,

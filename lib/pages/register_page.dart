@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Logo maior com sombra
+                // logo maior com sombra
                 Container(
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -138,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Campos de texto
+                // campos de texto
                 _buildTextField(emailController, "Email", false),
                 const SizedBox(height: 16),
                 _buildTextField(senhaController, "Senha", true),
@@ -146,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 _buildTextField(confirmarSenhaController, "Confirmar Senha", true),
                 const SizedBox(height: 32),
 
-                // Botão tipo gelatina
+                // botão tipo gelatina
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -196,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // Função para criar campos de texto com efeito vidro/gelatina
+  // função para criar campos de texto com efeito vidro/gelatina
   Widget _buildTextField(TextEditingController controller, String hint, bool obscure) {
     return TextField(
       controller: controller,

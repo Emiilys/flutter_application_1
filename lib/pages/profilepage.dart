@@ -1,4 +1,3 @@
-// 🔥 ADICIONADO: imports necessários
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  // 🔥 ADICIONADO: controlador do feedback
+  // controlador do feedback
   final TextEditingController _feedbackController = TextEditingController();
 
   String? _profileImageUrl;
@@ -104,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // 🔥 ADICIONADO: função para enviar feedback
+  // função para enviar feedback
     Future<void> _sendFeedback() async {
     if (_feedbackController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
-  // 🔥 ADICIONADO: modal para escrever feedback
+  // função para abrir modal de feedback
   void _openFeedbackModal() {
     showModalBottomSheet(
       context: context,
@@ -206,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
       ),
 
-      // 🔥 ADICIONADO: rodapé fixo de feedback
+      // rodapé fixo de feedback
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(
