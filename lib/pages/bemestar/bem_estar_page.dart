@@ -334,7 +334,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
             });
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Erro ao carregar dia: $e')),
+              SnackBar(content: Text('Erro ao carregar dia.')),
             );
           } finally {
             setState(() => _loadingDay = false);
@@ -373,11 +373,11 @@ class _BemEstarPageState extends State<BemEstarPage> {
             try {
               await salvarDiarioNoBanco(_selectedDay!, texto);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Diário salvo ✅')),
+                const SnackBar(content: Text('Diário salvo.')),
               );
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Erro ao salvar diário: $e')),
+                SnackBar(content: Text('Erro ao salvar diário.')),
               );
             }
           }),
@@ -433,10 +433,10 @@ class _BemEstarPageState extends State<BemEstarPage> {
                   try {
                     await salvarMetasNoBanco(_selectedDay!, metas);
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('Meta adicionada ✅')));
+                        .showSnackBar(const SnackBar(content: Text('Meta adicionada.')));
                   } catch (e) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('Erro ao salvar meta: $e')));
+                        .showSnackBar(SnackBar(content: Text('Erro ao salvar meta.')));
                   }
                 },
               ),
@@ -473,7 +473,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
                       await salvarMetasNoBanco(_selectedDay!, metas);
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Erro ao atualizar meta: $e')));
+                          SnackBar(content: Text('Erro ao atualizar meta.')));
                     }
                   },
                 ),
@@ -550,7 +550,7 @@ class _BemEstarPageState extends State<BemEstarPage> {
               await salvarHumoresNoBanco(_selectedDay!, lista);
             } catch (e) {
               ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Erro ao salvar humor: $e')));
+                  .showSnackBar(SnackBar(content: Text('Erro ao salvar humor.')));
             }
           },
         );

@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
           mensagemErro = 'Email inválido.';
           break;
         default:
-          mensagemErro = 'Erro ao fazer login: ${e.message}';
+          mensagemErro = 'Erro ao fazer login, tente novamente.';
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

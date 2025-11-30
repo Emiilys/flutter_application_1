@@ -93,7 +93,7 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar ficha: $e')),
+        SnackBar(content: Text('Erro ao carregar ficha.')),
       );
     } finally {
       setState(() => _carregando = false);
@@ -134,11 +134,11 @@ class _MinhaFichaPageState extends State<MinhaFichaPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ficha salva com sucesso! ✅')),
+        const SnackBar(content: Text('Ficha salva com sucesso.')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar ficha: $e')),
+        SnackBar(content: Text('Erro ao salvar ficha.')),
       );
     }
   }

@@ -78,7 +78,7 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar ficha: $e')),
+        SnackBar(content: Text('Erro ao carregar ficha.')),
       );
     } finally {
       setState(() => _loading = false);
@@ -110,13 +110,13 @@ class _FichaOutraPessoaIdosoPageState extends State<FichaOutraPessoaIdosoPage> {
           .set(ficha, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ficha do idoso salva com sucesso! ✅')),
+        const SnackBar(content: Text('Ficha do idoso salva com sucesso.')),
       );
 
       setState(() => _modoEdicao = false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar ficha: $e')),
+        SnackBar(content: Text('Erro ao salvar ficha.')),
       );
     }
   }

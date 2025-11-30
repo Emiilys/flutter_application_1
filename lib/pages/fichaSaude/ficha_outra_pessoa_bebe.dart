@@ -136,13 +136,13 @@ class _FichaBebePageState extends State<FichaBebePage>
           .set(ficha, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ficha do bebê salva com sucesso! ✅')),
+        const SnackBar(content: Text('Ficha do bebê salva com sucesso.')),
       );
 
       setState(() => _modoEdicao = false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar ficha: $e')),
+        SnackBar(content: Text('Erro ao salvar ficha.')),
       );
     }
   }
@@ -198,7 +198,7 @@ class _FichaBebePageState extends State<FichaBebePage>
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar ficha: $e')),
+        SnackBar(content: Text('Erro ao carregar ficha.')),
       );
     } finally {
       setState(() => _loading = false);
